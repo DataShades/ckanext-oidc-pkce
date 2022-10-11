@@ -1,0 +1,5 @@
+include README.rst
+include LICENSE
+include requirements.txt
+recursive-include ckanext/oidc_pkce *.html *.json *.js *.less *.css *.mo *.yml
+recursive-include ckanext/oidc_pkce/migration *.ini *.py *.mako
