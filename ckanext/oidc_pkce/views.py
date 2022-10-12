@@ -9,8 +9,8 @@ from flask import Blueprint
 
 import ckan.plugins.toolkit as tk
 from ckan.common import session
-
 from . import config, utils
+
 
 log = logging.getLogger(__name__)
 
@@ -112,8 +112,7 @@ def callback():
         config.userinfo_url(), headers={"Authorization": f"Bearer {access_token}"}
     ).json()
 
-    # user = utils.sync_user(userinfo)
-    user = None
+    user = utils.sync_user(userinfo)
     if not user:
         error = "User not found"
         log.error("Error: %s", error)

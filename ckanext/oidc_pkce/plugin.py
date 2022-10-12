@@ -11,11 +11,6 @@ from ckan.common import session
 
 from . import views, interfaces, utils
 
-try:
-    from ckan.common import login_user
-except ImportError:
-    login_user = lambda _: ...
-
 
 class OidcPkcePlugin(p.SingletonPlugin):
     p.implements(p.IAuthenticator, inherit=True)
@@ -31,9 +26,11 @@ class OidcPkcePlugin(p.SingletonPlugin):
         user = model.User.get(session.get(utils.SESSION_USER))
 
         if user:
+            # CKAN < 2.10
             tk.g.user = user.name
             tk.g.userobj = user
-            login_user(user)
+            if tk.check_ckan_version("2.10"):
+                return user
 
     def logout(self):
         utils.logout()
