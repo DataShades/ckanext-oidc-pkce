@@ -17,6 +17,7 @@ log = logging.getLogger(__name__)
 SESSION_VERIFIER = "ckanext:oidc-pkce:verifier"
 SESSION_STATE = "ckanext:oidc-pkce:state"
 SESSION_CAME_FROM = "ckanext:oidc-pkce:came_from"
+SESSION_ERROR = "ckanext:oidc-pkce:error"
 
 bp = Blueprint("oidc_pkce", __name__)
 
@@ -28,6 +29,7 @@ def get_blueprints():
 
 @bp.route("/user/login/oidc-pkce")
 def login():
+
     verifier = utils.code_verifier()
     state = utils.app_state()
     session[SESSION_VERIFIER] = verifier
@@ -49,7 +51,12 @@ def login():
         base_url=config.auth_url(), query_params=urlencode(params)
     )
 
-    return tk.redirect_to(url)
+    resp = tk.redirect_to(url)
+
+    resp.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+    resp.headers["Pragma"] = "no-cache"
+    resp.headers["Expires"] = "0"
+    return resp
 
 
 def callback():
@@ -58,9 +65,10 @@ def callback():
     state = tk.request.args.get("state")
     code = tk.request.args.get("code")
 
+
     verifier = session.pop(SESSION_VERIFIER, None)
     session_state = session.pop(SESSION_STATE, None)
-    came_from = session.pop(SESSION_CAME_FROM) or tk.url_for("user.login")
+    came_from = session.pop(SESSION_CAME_FROM, None) or tk.url_for("user.login")
 
     if not error:
         if not verifier:
@@ -71,7 +79,8 @@ def callback():
             error = "The app state does not match"
 
     if error:
-        tk.h.flash_error(f"Error: {error}")
+        log.error(f"Error: {error}")
+        session[SESSION_ERROR] = error
         return tk.redirect_to(came_from)
 
     headers = {
@@ -91,7 +100,9 @@ def callback():
 
     # Get tokens and validate
     if not exchange.get("token_type"):
-        tk.h.flash_error("Error: Unsupported token type. Should be 'Bearer'.")
+        error = "Unsupported token type. Should be 'Bearer'."
+        log.error("Error: %s", error)
+        session[SESSION_ERROR] = error
         return tk.redirect_to(came_from)
 
     access_token = exchange["access_token"]
@@ -101,10 +112,13 @@ def callback():
         config.userinfo_url(), headers={"Authorization": f"Bearer {access_token}"}
     ).json()
 
-    user = utils.sync_user(userinfo)
+    # user = utils.sync_user(userinfo)
+    user = None
     if not user:
-        tk.h.flash_error("Error: User not found")
+        error = "User not found"
+        log.error("Error: %s", error)
+        session[SESSION_ERROR] = error
         return tk.redirect_to(came_from)
 
     utils.login(user)
-    return tk.redirect_to(tk.url_for("dashboard.index"))
+    return tk.redirect_to(tk.config.get('ckan.route_after_login', 'dashboard.index'))
