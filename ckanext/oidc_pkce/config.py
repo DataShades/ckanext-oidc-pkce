@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Optional
 
 import ckan.plugins.toolkit as tk
 from ckan.exceptions import CkanConfigurationException
@@ -18,6 +19,9 @@ DEFAULT_USERINFO_PATH = "/oauth2/default/v1/userinfo"
 
 CONFIG_REDIRECT_PATH = "ckanext.oidc_pkce.redirect_path"
 DEFAULT_REDIRECT_PATH = "/user/login/oidc-pkce/callback"
+
+CONFIG_ERROR_REDIRECT = "ckanext.oidc_pkce.error_redirect"
+DEFAULT_ERROR_REDIRECT = None
 
 CONFIG_SCOPE = "ckanext.oidc_pkce.scope"
 DEFAULT_SCOPE = "openid email profile"
@@ -88,3 +92,7 @@ def token_url() -> str:
 
 def munge_password() -> bool:
     return tk.asbool(tk.config.get(CONFIG_MUNGE_PASSWORD, DEFAULT_MUNGE_PASSWORD))
+
+
+def error_redirect() -> Optional[str]:
+    return tk.config.get(CONFIG_ERROR_REDIRECT, DEFAULT_ERROR_REDIRECT)

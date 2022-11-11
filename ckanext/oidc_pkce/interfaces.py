@@ -8,7 +8,7 @@ from ckan import model
 from ckan.plugins import Interface
 from ckan.logic.action.create import _get_random_username_from_email
 
-from . import config
+from . import config, signals
 
 
 class IOidcPkce(Interface):
@@ -22,6 +22,7 @@ class IOidcPkce(Interface):
         ).one_or_none()
 
         if user:
+            signals.user_exist.send(user.id)
             return user
 
         user = q.filter_by(email=userinfo["email"]).one_or_none()
@@ -43,6 +44,7 @@ class IOidcPkce(Interface):
             user_dict.update(data)
             tk.get_action("user_update")({"user": admin["name"]}, user_dict)
 
+            signals.user_sync.send(user.id)
             return user
 
         return self.create_oidc_user(userinfo)
@@ -69,6 +71,7 @@ class IOidcPkce(Interface):
         admin = tk.get_action("get_site_user")({"ignore_auth": True}, {})
         user = tk.get_action("user_create")({"user": admin["name"]}, user_dict)
 
+        signals.user_create.send(user["id"])
         return model.User.get(user["id"])
 
     # def _attach_details(id: str, details):

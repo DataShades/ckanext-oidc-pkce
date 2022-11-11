@@ -68,7 +68,7 @@ def callback():
 
     verifier = session.pop(SESSION_VERIFIER, None)
     session_state = session.pop(SESSION_STATE, None)
-    came_from = session.pop(SESSION_CAME_FROM, None) or tk.url_for("user.login")
+    came_from = config.error_redirect() or session.pop(SESSION_CAME_FROM, None) or tk.url_for("user.login")
 
     if not error:
         if not verifier:
