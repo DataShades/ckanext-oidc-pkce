@@ -8,7 +8,8 @@ import ckan.plugins as p
 import ckan.plugins.toolkit as tk
 from ckan import model
 from ckan.common import session
-
+if tk.check_ckan_version("2.10"):
+    from ckan.common import login_user
 from . import views, interfaces, utils
 
 
@@ -30,7 +31,7 @@ class OidcPkcePlugin(p.SingletonPlugin):
             tk.g.user = user.name
             tk.g.userobj = user
             if tk.check_ckan_version("2.10"):
-                return user
+                login_user(user)
 
     def logout(self):
         utils.logout()

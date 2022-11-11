@@ -25,6 +25,9 @@ DEFAULT_SCOPE = "openid email profile"
 CONFIG_SAME_ID = "ckanext.oidc_pkce.use_same_id"
 DEFAULT_SAME_ID = False
 
+CONFIG_MUNGE_PASSWORD = "ckanext.oidc_pkce.munge_password"
+DEFAULT_MUNGE_PASSWORD = False
+
 
 def scope() -> str:
     return tk.config.get(CONFIG_SCOPE, DEFAULT_SCOPE)
@@ -81,3 +84,7 @@ def auth_url() -> str:
 
 def token_url() -> str:
     return base_url() + token_path()
+
+
+def munge_password() -> bool:
+    return tk.asbool(tk.config.get(CONFIG_MUNGE_PASSWORD, DEFAULT_MUNGE_PASSWORD))
