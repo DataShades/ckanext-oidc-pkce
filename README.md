@@ -1,122 +1,85 @@
-[![Tests](https://github.com/DataShades/ckanext-oidc-pkce/workflows/Tests/badge.svg?branch=main)](https://github.com/DataShades/ckanext-oidc-pkce/actions)
-
 # ckanext-oidc-pkce
 
-**TODO:** Put a description of your extension here:  What does it do? What features does it have? Consider including some screenshots or embedding a video!
+OpenID connect with PKCE flow implementation for CKAN.
 
+> **Warning**
+> Developed for Okta and not tested with other providers.
+> PRs or feature-requests are welcome
+
+The plugin adds an extra route to CKAN allowing login through an external
+application. This route available at `/user/login/oidc-pkce`(`oid_pkce.login`
+endpoint). Original authentication system from CKAN is unchanged and it's up to
+you(or another extension) to hide original login page if only SSO accounts are
+allowed on the portal.
 
 ## Requirements
 
-**TODO:** For example, you might want to mention here which versions of CKAN this
-extension works with.
-
-If your extension works across different versions you can add the following table:
-
 Compatibility with core CKAN versions:
 
-| CKAN version    | Compatible?   |
-| --------------- | ------------- |
-| 2.6 and earlier | not tested    |
-| 2.7             | not tested    |
-| 2.8             | not tested    |
-| 2.9             | not tested    |
-
-Suggested values:
-
-* "yes"
-* "not tested" - I can't think of a reason why it wouldn't work
-* "not yet" - there is an intention to get it working
-* "no"
+| CKAN version | Compatible? |
+|--------------|-------------|
+| 2.9          | yes         |
+| 2.10         | not yet     |
 
 
 ## Installation
 
-**TODO:** Add any additional install steps to the list below.
-   For example installing any non-Python dependencies or adding any required
-   config settings.
+1. Install the package
+   ```sh
+   pip install ckanext-oidc-pkce
+   ```
 
-To install ckanext-oidc-pkce:
+1. Add `oidc-pkce` to the `ckan.plugins` setting in your CKAN
+   config file
 
-1. Activate your CKAN virtual environment, for example:
-
-     . /usr/lib/ckan/default/bin/activate
-
-2. Clone the source and install it on the virtualenv
-
-    git clone https://github.com/DataShades/ckanext-oidc-pkce.git
-    cd ckanext-oidc-pkce
-    pip install -e .
-	pip install -r requirements.txt
-
-3. Add `oidc-pkce` to the `ckan.plugins` setting in your CKAN
-   config file (by default the config file is located at
-   `/etc/ckan/default/ckan.ini`).
-
-4. Restart CKAN. For example if you've deployed CKAN with Apache on Ubuntu:
-
-     sudo service apache2 reload
-
+1. Add SSO settings(refer [config settings](#config-settings) section for details)
 
 ## Config settings
 
-None at present
+```ini
+# URL of SSO application
+ckanext.oidc_pkce.base_url = https://12345.example.okta.com
 
-**TODO:** Document any optional config settings here. For example:
+# ClientID of SSO application
+ckanext.oidc_pkce.client_id = clientid
 
-	# The minimum number of hours to wait before re-checking a resource
-	# (optional, default: 24).
-	ckanext.oidc_pkce.some_setting = some_default_value
+# Path to the authorization endpont inside SSO application
+# (optional, default: /oauth2/default/v1/authorize).
+ckanext.oidc_pkce.auth_path = /auth
 
+# Path to the token endpont inside SSO application
+# (optional, default: /oauth2/default/v1/token).
+ckanext.oidc_pkce.token_path = /token
 
-## Developer installation
+# Path to the userinfo endpont inside SSO application
+# (optional, default: /oauth2/default/v1/userinfo).
+ckanext.oidc_pkce.userinfo_path = /userinfo
 
-To install ckanext-oidc-pkce for development, activate your CKAN virtualenv and
-do:
+# Path to the authentication response handler inside CKAN application
+# (optional, default: /user/login/oidc-pkce/callback).
+ckanext.oidc_pkce.redirect_path = /local/oidc/handler
 
-    git clone https://github.com/DataShades/ckanext-oidc-pkce.git
-    cd ckanext-oidc-pkce
-    python setup.py develop
-    pip install -r dev-requirements.txt
+# URL to redirect user in case of failed login attempt
+# (optional, default: `came_from` URL parameter or CKAN login page).
+ckanext.oidc_pkce.error_redirect
 
+# Scope of the authorization token.
+# The plugin expects at least `sub`, `email` and `name` attributes.
+# (optional, default: openid email profile).
+ckanext.oidc_pkce.scope = email openid
 
-## Tests
+# For newly created CKAN users use the same ID as one from SSO application
+# (optional, default: False).
+ckanext.oidc_pkce.use_same_id = true
 
-To run the tests, do:
+# When connecting to an existing(non-sso) account,
+# override user's password so that it becomes impossible
+# to login using CKAN authentication system. Enable this flag if you
+# want to force SSO-logins for all users that once used SSO-login.
+# (optional, default: False).
+ckanext.oidc_pkce.munge_password = true
 
-    pytest --ckan-ini=test.ini
-
-
-## Releasing a new version of ckanext-oidc-pkce
-
-If ckanext-oidc-pkce should be available on PyPI you can follow these steps to publish a new version:
-
-1. Update the version number in the `setup.py` file. See [PEP 440](http://legacy.python.org/dev/peps/pep-0440/#public-version-identifiers) for how to choose version numbers.
-
-2. Make sure you have the latest version of necessary packages:
-
-    pip install --upgrade setuptools wheel twine
-
-3. Create a source and binary distributions of the new version:
-
-       python setup.py sdist bdist_wheel && twine check dist/*
-
-   Fix any errors you get.
-
-4. Upload the source distribution to PyPI:
-
-       twine upload dist/*
-
-5. Commit any outstanding changes:
-
-       git commit -a
-       git push
-
-6. Tag the new release of the project on GitHub with the version number from
-   the `setup.py` file. For example if the version number in `setup.py` is
-   0.0.1 then do:
-
-       git tag 0.0.1
-       git push --tags
+```
 
 ## License
 
