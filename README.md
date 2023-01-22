@@ -29,7 +29,7 @@ Compatibility with core CKAN versions:
    pip install ckanext-oidc-pkce
    ```
 
-1. Add `oidc-pkce` to the `ckan.plugins` setting in your CKAN
+1. Add `oidc_pkce` to the `ckan.plugins` setting in your CKAN
    config file
 
 1. Add SSO settings(refer [config settings](#config-settings) section for details)
@@ -59,8 +59,10 @@ ckanext.oidc_pkce.userinfo_path = /userinfo
 # (optional, default: /user/login/oidc-pkce/callback).
 ckanext.oidc_pkce.redirect_path = /local/oidc/handler
 
-# URL to redirect user in case of failed login attempt
-# (optional, default: `came_from` URL parameter or CKAN login page).
+# URL to redirect user in case of failed login attempt.
+# When empty(default) redirects to `came_from` URL parameter
+# if availabe or to CKAN login page otherwise.
+# (optional, default: none).
 ckanext.oidc_pkce.error_redirect
 
 # Scope of the authorization token.
@@ -69,14 +71,14 @@ ckanext.oidc_pkce.error_redirect
 ckanext.oidc_pkce.scope = email openid
 
 # For newly created CKAN users use the same ID as one from SSO application
-# (optional, default: False).
+# (optional, default: false).
 ckanext.oidc_pkce.use_same_id = true
 
 # When connecting to an existing(non-sso) account,
 # override user's password so that it becomes impossible
 # to login using CKAN authentication system. Enable this flag if you
 # want to force SSO-logins for all users that once used SSO-login.
-# (optional, default: False).
+# (optional, default: false).
 ckanext.oidc_pkce.munge_password = true
 
 ```
