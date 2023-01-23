@@ -8,14 +8,16 @@ import ckan.plugins as p
 import ckan.plugins.toolkit as tk
 from ckan import model
 from ckan.common import session
+
 if tk.check_ckan_version("2.10"):
     from ckan.common import login_user
-from . import views, interfaces, utils
+from . import views, interfaces, utils, helpers
 
 
 class OidcPkcePlugin(p.SingletonPlugin):
     p.implements(p.IAuthenticator, inherit=True)
     p.implements(p.IBlueprint)
+    p.implements(p.ITemplateHelpers)
     p.implements(interfaces.IOidcPkce, inherit=True)
 
     # IBlueprint
@@ -35,3 +37,9 @@ class OidcPkcePlugin(p.SingletonPlugin):
 
     def logout(self):
         utils.logout()
+
+    # ITemplateHelpers
+    def get_helpers(
+        self,
+    ):
+        return helpers.get_helpers()

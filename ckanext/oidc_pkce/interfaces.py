@@ -18,7 +18,8 @@ class IOidcPkce(Interface):
         q = model.Session.query(model.User)
 
         user = q.filter(
-            model.User.plugin_extras["oidc_pkce"]["sub"].astext == userinfo["sub"]
+            model.User.plugin_extras["oidc_pkce"]["sub"].astext
+            == userinfo["sub"]
         ).one_or_none()
 
         if user:
@@ -28,8 +29,11 @@ class IOidcPkce(Interface):
         user = q.filter_by(email=userinfo["email"]).one_or_none()
         if user:
             admin = tk.get_action("get_site_user")({"ignore_auth": True}, {})
-            user_dict = tk.get_action("user_show")({"user": admin["name"]}, {"id": user.id, "include_plugin_extras": True})
-            extras = user_dict.pop('plugin_extras', None) or {}
+            user_dict = tk.get_action("user_show")(
+                {"user": admin["name"]},
+                {"id": user.id, "include_plugin_extras": True},
+            )
+            extras = user_dict.pop("plugin_extras", None) or {}
 
             data = self.oidc_info_into_user_dict(userinfo)
             data["id"] = user.id
@@ -49,10 +53,14 @@ class IOidcPkce(Interface):
 
         return self.create_oidc_user(userinfo)
 
-    def oidc_info_into_plugin_extras(self, userinfo: dict[str, Any]) -> dict[str, Any]:
+    def oidc_info_into_plugin_extras(
+        self, userinfo: dict[str, Any]
+    ) -> dict[str, Any]:
         return {"oidc_pkce": userinfo.copy()}
 
-    def oidc_info_into_user_dict(self, userinfo: dict[str, Any]) -> dict[str, Any]:
+    def oidc_info_into_user_dict(
+        self, userinfo: dict[str, Any]
+    ) -> dict[str, Any]:
         data = {
             "email": userinfo["email"],
             "name": _get_random_username_from_email(userinfo["email"]),

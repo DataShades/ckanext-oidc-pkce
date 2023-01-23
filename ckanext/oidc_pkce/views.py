@@ -29,7 +29,6 @@ def get_blueprints():
 
 @bp.route("/user/login/oidc-pkce")
 def login():
-
     verifier = utils.code_verifier()
     state = utils.app_state()
     session[SESSION_VERIFIER] = verifier
@@ -65,10 +64,13 @@ def callback():
     state = tk.request.args.get("state")
     code = tk.request.args.get("code")
 
-
     verifier = session.pop(SESSION_VERIFIER, None)
     session_state = session.pop(SESSION_STATE, None)
-    came_from = config.error_redirect() or session.pop(SESSION_CAME_FROM, None) or tk.url_for("user.login")
+    came_from = (
+        config.error_redirect()
+        or session.pop(SESSION_CAME_FROM, None)
+        or tk.url_for("user.login")
+    )
 
     if not error:
         if not verifier:
@@ -96,7 +98,9 @@ def callback():
         "code_verifier": verifier,
     }
 
-    exchange = requests.post(config.token_url(), headers=headers, data=data).json()
+    exchange = requests.post(
+        config.token_url(), headers=headers, data=data
+    ).json()
 
     # Get tokens and validate
     if not exchange.get("token_type"):
@@ -109,7 +113,8 @@ def callback():
 
     # Authorization flow successful, get userinfo and login user
     userinfo = requests.get(
-        config.userinfo_url(), headers={"Authorization": f"Bearer {access_token}"}
+        config.userinfo_url(),
+        headers={"Authorization": f"Bearer {access_token}"},
     ).json()
 
     user = utils.sync_user(userinfo)
@@ -120,4 +125,6 @@ def callback():
         return tk.redirect_to(came_from)
 
     utils.login(user)
-    return tk.redirect_to(tk.config.get('ckan.route_after_login', 'dashboard.index'))
+    return tk.redirect_to(
+        tk.config.get("ckan.route_after_login", "dashboard.index")
+    )

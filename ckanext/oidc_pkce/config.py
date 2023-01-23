@@ -44,13 +44,14 @@ def same_id() -> bool:
 def client_id() -> str:
     id_ = tk.config.get(CONFIG_CLIENT_ID)
     if not id_:
-        raise CkanConfigurationException(f"{CONFIG_CLIENT_ID} must be configured")
+        raise CkanConfigurationException(
+            f"{CONFIG_CLIENT_ID} must be configured"
+        )
 
     return id_
 
 
 def auth_path() -> str:
-
     return tk.config.get(CONFIG_AUTH_PATH, DEFAULT_AUTH_PATH)
 
 
@@ -77,7 +78,9 @@ def userinfo_url() -> str:
 def base_url() -> str:
     url = tk.config.get(CONFIG_BASE_URL, None)
     if not url:
-        raise CkanConfigurationException(f"{CONFIG_BASE_URL} must be configured")
+        raise CkanConfigurationException(
+            f"{CONFIG_BASE_URL} must be configured"
+        )
 
     return url.rstrip("/")
 
@@ -91,7 +94,9 @@ def token_url() -> str:
 
 
 def munge_password() -> bool:
-    return tk.asbool(tk.config.get(CONFIG_MUNGE_PASSWORD, DEFAULT_MUNGE_PASSWORD))
+    return tk.asbool(
+        tk.config.get(CONFIG_MUNGE_PASSWORD, DEFAULT_MUNGE_PASSWORD)
+    )
 
 
 def error_redirect() -> Optional[str]:
