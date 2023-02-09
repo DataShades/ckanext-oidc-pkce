@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.2](https://github.com/DataShades/ckanext-oidc-pkce/compare/v0.1.1...v0.1.2) (2023-02-09)
+
+
+### Bug Fixes
+
+* case-insensitive emails ([00ec591](https://github.com/DataShades/ckanext-oidc-pkce/commit/00ec591e8b1111f1f43b9a606bee1653d45fb53f))
+
 ### [0.1.1](https://github.com/DataShades/ckanext-oidc-pkce/compare/v0.1.0...v0.1.1) (2023-01-23)
 
 ## [0.1.0](https://github.com/DataShades/ckanext-oidc-pkce/compare/v0.0.3...v0.1.0) (2022-11-11)
