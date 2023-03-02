@@ -1,9 +1,9 @@
 from __future__ import annotations
+
 from typing import Optional
 
 import ckan.plugins.toolkit as tk
 from ckan.exceptions import CkanConfigurationException
-
 
 CONFIG_BASE_URL = "ckanext.oidc_pkce.base_url"
 CONFIG_CLIENT_ID = "ckanext.oidc_pkce.client_id"
@@ -34,8 +34,7 @@ DEFAULT_MUNGE_PASSWORD = False
 
 
 def client_id() -> str:
-    """ClientID for SSO application
-    """
+    """ClientID for SSO application"""
     id_ = tk.config.get(CONFIG_CLIENT_ID)
     if not id_:
         raise CkanConfigurationException(
@@ -46,8 +45,7 @@ def client_id() -> str:
 
 
 def base_url() -> str:
-    """Base URL of the SSO application.
-    """
+    """Base URL of the SSO application."""
     url = tk.config.get(CONFIG_BASE_URL, None)
     if not url:
         raise CkanConfigurationException(
@@ -56,56 +54,55 @@ def base_url() -> str:
 
     return url.rstrip("/")
 
+
 def auth_path() -> str:
-    """Path(without base URL) where authentication happens.
-    """
+    """Path(without base URL) where authentication happens."""
     return tk.config.get(CONFIG_AUTH_PATH, DEFAULT_AUTH_PATH)
 
 
 def auth_url() -> str:
-    """SSO URL where authentication happens.
-    """
+    """SSO URL where authentication happens."""
     return base_url() + auth_path()
 
+
 def token_path() -> str:
-    """Path(without base URL) where authorization token can be retrived.
-    """
+    """Path(without base URL) where authorization token can be retrived."""
     return tk.config.get(CONFIG_TOKEN_PATH, DEFAULT_TOKEN_PATH)
 
+
 def token_url() -> str:
-    """SSO URL where authorization token can be retrived.
-    """
+    """SSO URL where authorization token can be retrived."""
     return base_url() + token_path()
 
+
 def redirect_path() -> str:
-    """Path(without base URL) that handles authentication response.
-    """
+    """Path(without base URL) that handles authentication response."""
 
     return tk.config.get(CONFIG_REDIRECT_PATH, DEFAULT_REDIRECT_PATH)
 
+
 def redirect_url() -> str:
-    """CKAN URL that handles authentication response.
-    """
+    """CKAN URL that handles authentication response."""
     return tk.config["ckan.site_url"].rstrip("/") + redirect_path()
 
+
 def userinfo_path() -> str:
-    """Path(without base URL) where user info can be retrived.
-    """
+    """Path(without base URL) where user info can be retrived."""
     return tk.config.get(CONFIG_USERINFO_PATH, DEFAULT_USERINFO_PATH)
 
+
 def userinfo_url() -> str:
-    """SSO URL where user info can be retrived.
-    """
+    """SSO URL where user info can be retrived."""
     return base_url() + userinfo_path()
 
+
 def error_redirect() -> Optional[str]:
-    """Destination for redirect after the failed login attempt.
-    """
+    """Destination for redirect after the failed login attempt."""
     return tk.config.get(CONFIG_ERROR_REDIRECT, DEFAULT_ERROR_REDIRECT)
 
+
 def same_id() -> bool:
-    """Use SSO `sub` as CKAN UserID.
-    """
+    """Use SSO `sub` as CKAN UserID."""
     return tk.asbool(tk.config.get(CONFIG_SAME_ID, DEFAULT_SAME_ID))
 
 
@@ -119,8 +116,6 @@ def munge_password() -> bool:
     )
 
 
-
 def scope() -> str:
-    """Scope of the user info retrived from SSO application
-    """
+    """Scope of the user info retrived from SSO application"""
     return tk.config.get(CONFIG_SCOPE, DEFAULT_SCOPE)

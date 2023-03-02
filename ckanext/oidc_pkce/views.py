@@ -4,13 +4,12 @@ import logging
 from urllib.parse import urlencode
 
 import requests
-
 from flask import Blueprint
 
 import ckan.plugins.toolkit as tk
 from ckan.common import session
-from . import config, utils
 
+from . import config, utils
 
 log = logging.getLogger(__name__)
 

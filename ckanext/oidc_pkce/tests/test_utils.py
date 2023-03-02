@@ -1,8 +1,8 @@
 import pytest
 
 from ckan import model
-from ckanext.oidc_pkce import utils
 
+from ckanext.oidc_pkce import utils
 
 
 @pytest.mark.usefixtures("with_plugins", "clean_db")

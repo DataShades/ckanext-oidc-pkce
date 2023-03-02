@@ -9,8 +9,7 @@ import ckan.plugins.toolkit as tk
 from ckan import model
 from ckan.common import session
 
-from . import views, interfaces, utils, helpers
-
+from . import helpers, interfaces, utils, views
 
 try:
     config_declarations = tk.blanket.config_declarations

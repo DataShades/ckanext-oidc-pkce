@@ -1,12 +1,12 @@
 from __future__ import annotations
+
 import secrets
 from typing import Any, Optional
 
 import ckan.plugins.toolkit as tk
-
 from ckan import model
-from ckan.plugins import Interface
 from ckan.logic.action.create import _get_random_username_from_email
+from ckan.plugins import Interface
 
 from . import config, signals
 
@@ -26,7 +26,9 @@ class IOidcPkce(Interface):
             signals.user_exist.send(user.id)
             return user
 
-        user = q.filter(model.User.email.ilike(userinfo["email"])).one_or_none()
+        user = q.filter(
+            model.User.email.ilike(userinfo["email"])
+        ).one_or_none()
         if user:
             admin = tk.get_action("get_site_user")({"ignore_auth": True}, {})
             user_dict = tk.get_action("user_show")(

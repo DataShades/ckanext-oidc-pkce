@@ -1,8 +1,10 @@
 from __future__ import annotations
+
 from typing import Any, Optional
 
-import ckan.plugins.toolkit as tk
 from typing_extensions import TypedDict
+
+import ckan.plugins.toolkit as tk
 
 
 class UserDictWithExtras(TypedDict):
