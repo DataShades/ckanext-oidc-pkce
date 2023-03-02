@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.2.0](https://github.com/DataShades/ckanext-oidc-pkce/compare/v0.1.2...v0.2.0) (2023-03-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* ckan 2.10 support
+
+### Features
+
+* config declarations ([a8a02ee](https://github.com/DataShades/ckanext-oidc-pkce/commit/a8a02eedd4650a081a4641c5c6adeff1a476e842))
+
+
+### Bug Fixes
+
+* ckan 2.10 support ([ac6f43e](https://github.com/DataShades/ckanext-oidc-pkce/commit/ac6f43e52550acd6e66fca28642a1843466debae))
+
 ### [0.1.2](https://github.com/DataShades/ckanext-oidc-pkce/compare/v0.1.1...v0.1.2) (2023-02-09)
 
 
