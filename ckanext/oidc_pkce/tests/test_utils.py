@@ -17,6 +17,10 @@ class TestSyncUser:
         utils.sync_user(user_info)
 
         attached = model.User.by_email(user_info["email"])
+        if isinstance(attached, list):
+            # CKAN < 2.10
+            attached = attached[0]
+
         assert user["id"] == attached.id
 
     def test_sync_by_case_insensitive_email(self, user_factory, user_info):
@@ -24,4 +28,8 @@ class TestSyncUser:
         utils.sync_user(user_info)
 
         attached = model.User.by_email(user_info["email"])
+        if isinstance(attached, list):
+            # CKAN < 2.10
+            attached = attached[0]
+
         assert user["id"] == attached.id
