@@ -9,6 +9,7 @@ from typing import Any, Optional
 from ckan import model
 from ckan.common import session
 from ckan.plugins import PluginImplementations
+import ckan.plugins.toolkit as tk
 
 from .interfaces import IOidcPkce
 
@@ -50,8 +51,8 @@ def sync_user(userinfo: dict[str, Any]) -> Optional[model.User]:
 
 
 def login(user: model.User):
-    session[SESSION_USER] = user.name
-
-
-def logout():
-    session.pop(SESSION_USER, None)
+    if tk.check_ckan_version("2.10"):
+        from ckan.common import login_user
+        login_user(user)
+    else:
+        session[SESSION_USER] = user.name
