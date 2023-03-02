@@ -52,7 +52,7 @@ groups:
       - key: ckanext.oidc_pkce.use_same_id
         type: bool
         default: false
-        example: true
+        example: "true"
         description: |
           For newly created CKAN users use the same ID as one from SSO
           application
@@ -60,7 +60,7 @@ groups:
       - key: ckanext.oidc_pkce.munge_password
         type: bool
         default: false
-        example: true
+        example: "true"
         description: |
           When connecting to an existing(non-sso) account, override user's
           password so that it becomes impossible to login using CKAN
