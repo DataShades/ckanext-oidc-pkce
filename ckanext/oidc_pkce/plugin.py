@@ -14,7 +14,8 @@ from . import helpers, interfaces, utils, views
 try:
     config_declarations = tk.blanket.config_declarations
 except AttributeError:
-    config_declarations = lambda cls: cls
+    def config_declarations(cls):
+        return cls
 
 
 @config_declarations

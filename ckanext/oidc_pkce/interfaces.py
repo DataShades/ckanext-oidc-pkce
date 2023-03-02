@@ -83,18 +83,3 @@ class IOidcPkce(Interface):
 
         signals.user_create.send(user["id"])
         return model.User.get(user["id"])
-
-    # def _attach_details(id: str, details):
-    #     admin = tk.get_action("get_site_user")({"ignore_auth": True}, {})
-    #     user = tk.get_action("user_show")({"user": admin["name"]}, {"id": id, "include_plugin_extras": True})
-
-    #     # do not drop extras that were set by other plugins
-    #     extras = user.pop('plugin_extras', None) or {}
-    #     patch = details.make_userdict()
-    #     extras.update(patch['plugin_extras'])
-    #     patch['plugin_extras'] = extras
-    #     user.update(patch)
-
-    #     # user_patch is not available in v2.9
-    #     user = tk.get_action("user_update")({"user": admin["name"]}, user)
-    #     return user
