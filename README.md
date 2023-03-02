@@ -1,6 +1,8 @@
+[![Tests](https://github.com/DataShades/ckanext-oidc-pkce/actions/workflows/test.yml/badge.svg)](https://github.com/DataShades/ckanext-oidc-pkce/actions/workflows/test.yml)
+
 # ckanext-oidc-pkce
 
-OpenID connect with PKCE flow implementation for CKAN.
+OpenID connect with PKCE flow authenticator for CKAN.
 
 > **Warning**
 > Developed for Okta and not tested with other providers.
@@ -19,7 +21,7 @@ Compatibility with core CKAN versions:
 | CKAN version | Compatible? |
 |--------------|-------------|
 | 2.9          | yes         |
-| 2.10         | not yet     |
+| 2.10         | yes         |
 
 
 ## Installation
