@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.1](https://github.com/DataShades/ckanext-oidc-pkce/compare/v0.2.0...v0.2.1) (2023-03-03)
+
+
+### Bug Fixes
+
+* add config declaration to manifest ([d825371](https://github.com/DataShades/ckanext-oidc-pkce/commit/d825371aca8f9c1f4bd3a060ce11aac4c19bfa30))
+
 ## [0.2.0](https://github.com/DataShades/ckanext-oidc-pkce/compare/v0.1.2...v0.2.0) (2023-03-02)
 
 
