@@ -66,7 +66,7 @@ class IOidcPkce(Interface):
         data = {
             "email": userinfo["email"],
             "name": _get_random_username_from_email(userinfo["email"]),
-            "password": secrets.token_urlsafe(60),
+            "password": secrets.token_urlsafe(60) + "1A!a_",
             "fullname": userinfo["name"],
             "plugin_extras": self.oidc_info_into_plugin_extras(userinfo),
         }
@@ -83,3 +83,6 @@ class IOidcPkce(Interface):
 
         signals.user_create.send(user["id"])
         return model.User.get(user["id"])
+
+    def oidc_login_response(self, user: model.User) -> Any:
+        return None

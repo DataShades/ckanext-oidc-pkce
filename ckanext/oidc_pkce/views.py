@@ -8,8 +8,10 @@ from flask import Blueprint
 
 import ckan.plugins.toolkit as tk
 from ckan.common import session
+from ckan.plugins import PluginImplementations
 
 from . import config, utils
+from .interfaces import IOidcPkce
 
 log = logging.getLogger(__name__)
 
@@ -122,6 +124,11 @@ def callback():
         log.error("Error: %s", error)
         session[SESSION_ERROR] = error
         return tk.redirect_to(came_from)
+
+    for plugin in PluginImplementations(IOidcPkce):
+        resp = plugin.oidc_login_response(user)
+        if resp:
+            return resp
 
     utils.login(user)
     return tk.redirect_to(
