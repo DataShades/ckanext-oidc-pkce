@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import base64
 import logging
 from urllib.parse import urlencode
 
@@ -91,6 +92,11 @@ def callback():
         "cache-control": "no-cache",
         "content-type": "application/x-www-form-urlencoded",
     }
+    
+    if config.client_secret():
+        auth_header: str = config.client_id() + ":" + config.client_secret()
+        headers["Authorization"] = "Basic " + base64.b64encode(auth_header.encode('ascii')).decode('ascii')
+
     data = {
         "grant_type": "authorization_code",
         "client_id": config.client_id(),

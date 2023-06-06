@@ -7,6 +7,7 @@ from ckan.exceptions import CkanConfigurationException
 
 CONFIG_BASE_URL = "ckanext.oidc_pkce.base_url"
 CONFIG_CLIENT_ID = "ckanext.oidc_pkce.client_id"
+CONFIG_CLIENT_SECRET = "ckanext.oidc_pkce.client_secret"
 
 CONFIG_AUTH_PATH = "ckanext.oidc_pkce.auth_path"
 DEFAULT_AUTH_PATH = "/oauth2/default/v1/authorize"
@@ -42,6 +43,17 @@ def client_id() -> str:
         )
 
     return id_
+
+
+def client_secret() -> str:
+    """ClientSecret for SSO application"""
+    secret_ = tk.config.get(CONFIG_CLIENT_SECRET)
+    if not secret_:
+        raise CkanConfigurationException(
+            f"{CONFIG_CLIENT_SECRET} must be configured"
+        )
+
+    return secret_
 
 
 def base_url() -> str:
