@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/DataShades/ckanext-oidc-pkce/compare/v0.2.3...v0.3.0) (2023-06-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* base_url, client_id, client_secret can be set via envvar
+
+### Features
+
+* Added `ckanext.oidc_pkce.client_secret` config option ([0874c3f](https://github.com/DataShades/ckanext-oidc-pkce/commit/0874c3f3b4920d5e6254fea9fc1480edf18326b8))
+* base_url, client_id, client_secret can be set via envvar ([859934f](https://github.com/DataShades/ckanext-oidc-pkce/commit/859934fcf64c2a6624797b1cf81b85613855a7b2))
+
 ### [0.2.3](https://github.com/DataShades/ckanext-oidc-pkce/compare/v0.2.2...v0.2.3) (2023-04-05)
 
 
