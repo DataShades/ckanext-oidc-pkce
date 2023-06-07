@@ -23,7 +23,6 @@ Compatibility with core CKAN versions:
 | 2.9          | yes         |
 | 2.10         | yes         |
 
-
 ## Installation
 
 1. Install the package
@@ -40,10 +39,17 @@ Compatibility with core CKAN versions:
 
 ```ini
 # URL of SSO application
+# Could be overriden at runtime with env var CKANEXT_OIDC_PKCE_BASE_URL
 ckanext.oidc_pkce.base_url = https://12345.example.okta.com
 
 # ClientID of SSO application
+# Could be overriden at runtime with env var CKANEXT_OIDC_PKCE_CLIENT_ID
 ckanext.oidc_pkce.client_id = clientid
+
+# ClientSecret of SSO application
+# (optional, only need id Client App defines a secret, default: "")
+# Could be overriden at runtime with env var CKANEXT_OIDC_PKCE_CLIENT_SECRET
+ckanext.oidc_pkce.client_secret = clientsecret
 
 # Path to the authorization endpont inside SSO application
 # (optional, default: /oauth2/default/v1/authorize)
