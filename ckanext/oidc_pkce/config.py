@@ -53,11 +53,6 @@ def client_secret() -> str:
     secret_ = os.environ.get('CKANEXT_OIDC_PKCE_CLIENT_SECRET')
     if not secret_:
         secret_ = tk.config.get(CONFIG_CLIENT_SECRET)
-        if not secret_:
-            raise CkanConfigurationException(
-                f"{CONFIG_CLIENT_SECRET} must be configured"
-            )
-
     return secret_
 
 
