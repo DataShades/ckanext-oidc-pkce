@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import os
 from typing import Optional
 
 import ckan.plugins.toolkit as tk
@@ -7,6 +8,7 @@ from ckan.exceptions import CkanConfigurationException
 
 CONFIG_BASE_URL = "ckanext.oidc_pkce.base_url"
 CONFIG_CLIENT_ID = "ckanext.oidc_pkce.client_id"
+CONFIG_CLIENT_SECRET = "ckanext.oidc_pkce.client_secret"
 
 CONFIG_AUTH_PATH = "ckanext.oidc_pkce.auth_path"
 DEFAULT_AUTH_PATH = "/oauth2/default/v1/authorize"
@@ -35,22 +37,34 @@ DEFAULT_MUNGE_PASSWORD = False
 
 def client_id() -> str:
     """ClientID for SSO application"""
-    id_ = tk.config.get(CONFIG_CLIENT_ID)
+    id_ = os.environ.get('CKANEXT_OIDC_PKCE_CLIENT_ID')
     if not id_:
-        raise CkanConfigurationException(
-            f"{CONFIG_CLIENT_ID} must be configured"
-        )
+        id_ = tk.config.get(CONFIG_CLIENT_ID)
+        if not id_:
+            raise CkanConfigurationException(
+                f"{CONFIG_CLIENT_ID} must be configured"
+            )
 
     return id_
 
 
+def client_secret() -> str:
+    """ClientSecret for SSO application"""
+    secret_ = os.environ.get('CKANEXT_OIDC_PKCE_CLIENT_SECRET')
+    if not secret_:
+        secret_ = tk.config.get(CONFIG_CLIENT_SECRET)
+    return secret_
+
+
 def base_url() -> str:
     """Base URL of the SSO application."""
-    url = tk.config.get(CONFIG_BASE_URL, None)
+    url = os.environ.get('CKANEXT_OIDC_PKCE_BASE_URL')
     if not url:
-        raise CkanConfigurationException(
-            f"{CONFIG_BASE_URL} must be configured"
-        )
+        url = tk.config.get(CONFIG_BASE_URL, None)
+        if not url:
+            raise CkanConfigurationException(
+                f"{CONFIG_BASE_URL} must be configured"
+            )
 
     return url.rstrip("/")
 
