@@ -70,7 +70,6 @@ def callback():
     session_state = session.pop(SESSION_STATE, None)
     came_from = (
         config.error_redirect()
-        or session.pop(SESSION_CAME_FROM, None)
         or tk.url_for("user.login")
     )
 
@@ -137,6 +136,9 @@ def callback():
             return resp
 
     utils.login(user)
+
+    came_from = session.pop(SESSION_CAME_FROM, None)
+
     return tk.redirect_to(
-        tk.config.get("ckan.route_after_login", "dashboard.index")
+        came_from or tk.config.get("ckan.route_after_login", "dashboard.index")
     )
