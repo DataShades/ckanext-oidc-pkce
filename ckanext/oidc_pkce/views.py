@@ -25,7 +25,7 @@ bp = Blueprint("oidc_pkce", __name__)
 
 
 def get_blueprints():
-    bp.add_url_rule(config.redirect_path(), view_func=callback)
+
     return [bp]
 
 
@@ -92,7 +92,7 @@ def callback():
         "cache-control": "no-cache",
         "content-type": "application/x-www-form-urlencoded",
     }
-    
+
     if config.client_secret():
         auth_header: str = config.client_id() + ":" + config.client_secret()
         headers["Authorization"] = "Basic " + base64.b64encode(auth_header.encode('ascii')).decode('ascii')
@@ -140,3 +140,5 @@ def callback():
     return tk.redirect_to(
         tk.config.get("ckan.route_after_login", "dashboard.index")
     )
+
+bp.add_url_rule(config.redirect_path(), view_func=callback)
