@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.3.1](https://github.com/DataShades/ckanext-oidc-pkce/compare/v0.3.0...v0.3.1) (2023-10-02)
+
+
+### Bug Fixes
+
+* `came_from` ignored after login ([5cc3676](https://github.com/DataShades/ckanext-oidc-pkce/commit/5cc3676721ed03dd07de1ea0fa6ddfa21317769a))
+
 ## [0.3.0](https://github.com/DataShades/ckanext-oidc-pkce/compare/v0.2.3...v0.3.0) (2023-06-07)
 
 
