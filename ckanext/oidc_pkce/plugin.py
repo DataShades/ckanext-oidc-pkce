@@ -21,12 +21,18 @@ except AttributeError:
 @config_declarations
 class OidcPkcePlugin(p.SingletonPlugin):
     p.implements(p.IBlueprint)
+    p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
     p.implements(interfaces.IOidcPkce, inherit=True)
 
     # IBlueprint
     def get_blueprint(self):
         return views.get_blueprints()
+
+    # IConfigurer
+
+    def update_config(self, config_):
+        tk.add_template_directory(config_, 'templates')
 
     # ITemplateHelpers
     def get_helpers(
