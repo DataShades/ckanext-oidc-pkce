@@ -143,4 +143,5 @@ def callback():
         came_from or tk.config.get("ckan.route_after_login", "dashboard.index")
     )
 
+
 bp.add_url_rule(config.redirect_path(), view_func=callback)
