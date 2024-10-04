@@ -1,5 +1,8 @@
+# encoding: utf-8
+
 from __future__ import annotations
 
+import logging
 import secrets
 from typing import Any, Optional
 
@@ -9,6 +12,8 @@ from ckan.logic.action.create import _get_random_username_from_email
 from ckan.plugins import Interface
 
 from . import config, signals
+
+log = logging.getLogger(__name__)
 
 
 class IOidcPkce(Interface):
@@ -26,10 +31,15 @@ class IOidcPkce(Interface):
             signals.user_exist.send(user.id)
             return user
 
-        user = q.filter(
+        users = q.filter(
             model.User.email.ilike(userinfo["email"])
-        ).one_or_none()
-        if user:
+        ).all()
+        if len(users) > 1:
+            log.error("Unable to uniquely identify account, found %s matches for: %s",
+                      len(users), userinfo["email"])
+            return None
+        elif users:
+            user = users[0]
             admin = tk.get_action("get_site_user")({"ignore_auth": True}, {})
             user_dict = tk.get_action("user_show")(
                 {"user": admin["name"]},

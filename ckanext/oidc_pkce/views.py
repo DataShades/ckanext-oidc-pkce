@@ -125,7 +125,7 @@ def callback():
 
     user = utils.sync_user(userinfo)
     if not user:
-        error = "User not found"
+        error = "Unique user not found"
         log.error("Error: %s", error)
         session[SESSION_ERROR] = error
         return tk.redirect_to(came_from)
