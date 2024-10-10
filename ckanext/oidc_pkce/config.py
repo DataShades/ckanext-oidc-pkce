@@ -22,6 +22,9 @@ DEFAULT_USERINFO_PATH = "/oauth2/default/v1/userinfo"
 CONFIG_REDIRECT_PATH = "ckanext.oidc_pkce.redirect_path"
 DEFAULT_REDIRECT_PATH = "/user/login/oidc-pkce/callback"
 
+CONFIG_LOGOUT_PATH = "ckanext.oidc_pkce.logout_path"
+DEFAULT_LOGOUT_PATH = ""
+
 CONFIG_ERROR_REDIRECT = "ckanext.oidc_pkce.error_redirect"
 DEFAULT_ERROR_REDIRECT = None
 
@@ -108,6 +111,20 @@ def userinfo_path() -> str:
 def userinfo_url() -> str:
     """SSO URL where user info can be retrived."""
     return base_url() + userinfo_path()
+
+
+def logout_path() -> str:
+    """Path(without base URL) that handles logout."""
+
+    return tk.config.get(CONFIG_LOGOUT_PATH, DEFAULT_LOGOUT_PATH)
+
+
+def logout_url() -> str:
+    """CKAN URL that handles authentication response."""
+    url = base_url()
+    if url:
+        url = url + logout_path()
+    return url
 
 
 def error_redirect() -> Optional[str]:

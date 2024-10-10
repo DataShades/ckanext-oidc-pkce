@@ -2,14 +2,16 @@ from __future__ import annotations
 
 from typing import Optional
 
+from flask import redirect
 from flask.wrappers import Response
 
 import ckan.plugins as p
 import ckan.plugins.toolkit as tk
 from ckan import model
-from ckan.common import session
+from ckan.common import current_user, session
+from ckan.views import user as user_view
 
-from . import helpers, interfaces, utils, views
+from . import config, helpers, interfaces, utils, views
 
 try:
     config_declarations = tk.blanket.config_declarations
@@ -23,6 +25,7 @@ class OidcPkcePlugin(p.SingletonPlugin):
     p.implements(p.IBlueprint)
     p.implements(p.IConfigurer)
     p.implements(p.ITemplateHelpers)
+    p.implements(p.IAuthenticator, inherit=True)
     p.implements(interfaces.IOidcPkce, inherit=True)
 
     # IBlueprint
@@ -40,10 +43,34 @@ class OidcPkcePlugin(p.SingletonPlugin):
     ):
         return helpers.get_helpers()
 
-    if not tk.check_ckan_version("2.10"):
-        p.implements(p.IAuthenticator, inherit=True)
+    # IAuthenticator
 
-        # IAuthenticator
+    if tk.check_ckan_version("2.10"):
+        def logout(self):
+            """ We want to return a view after the regular logout logic,
+            rather than before.
+
+            We set a flag to indicate that we're in the middle of logout,
+            then call the regular logout view. The view calls a second
+            instance of this function, which detects the flag and no-ops,
+            allowing the view to proceed and wipe the session.
+
+            After it completes, we assemble a redirect and pass that back
+            to the code that originally called this function.
+            """
+            if session.pop("_in_logout", False):
+                return None
+            elif not current_user.name:
+                # not logged in, do nothing
+                return None
+            else:
+                sso_logout_url = config.logout_url()
+                if not sso_logout_url:
+                    return None
+                session.put("_in_logout", True)
+                original_response = user_view.logout()
+                return redirect(sso_logout_url + '?redirect_uri=' + original_response.location)
+    else:
         def identify(self) -> Optional[Response]:
             user = model.User.get(session.get(utils.SESSION_USER))
             if user:
