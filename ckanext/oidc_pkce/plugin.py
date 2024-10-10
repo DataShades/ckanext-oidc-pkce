@@ -9,7 +9,7 @@ from flask.wrappers import Response
 import ckan.plugins as p
 import ckan.plugins.toolkit as tk
 from ckan import model
-from ckan.common import current_user, session
+from ckan.common import session
 from ckan.views import user as user_view
 
 from . import config, helpers, interfaces, utils, views
@@ -61,6 +61,7 @@ class OidcPkcePlugin(p.SingletonPlugin):
             After it completes, we assemble a redirect and pass that back
             to the code that originally called this function.
             """
+            from ckan.common import current_user
             if session.pop("_in_logout", False):
                 log.debug("SSO logout found in-progress flag, skipping")
                 return None
