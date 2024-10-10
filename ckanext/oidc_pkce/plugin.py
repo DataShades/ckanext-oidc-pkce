@@ -62,9 +62,10 @@ class OidcPkcePlugin(p.SingletonPlugin):
             to the code that originally called this function.
             """
             if session.pop("_in_logout", False):
+                log.debug("SSO logout found in-progress flag, skipping")
                 return None
             elif not current_user.name:
-                # not logged in, do nothing
+                log.info("No current user found, skipping SSO logout")
                 return None
             else:
                 log.info("Logging out [%s]", current_user.name)
