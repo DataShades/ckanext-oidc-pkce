@@ -64,20 +64,21 @@ class OidcPkcePlugin(p.SingletonPlugin):
             if session.pop("_in_logout", False):
                 log.debug("SSO logout found in-progress flag, skipping")
                 return None
-            elif not current_user.name:
+            username = current_user.name or tk.g.user
+            if not username:
                 log.info("No current user found, skipping SSO logout")
                 return None
             else:
-                log.info("Logging out [%s]", current_user.name)
+                log.info("Logging out [%s]", username)
                 sso_logout_url = config.logout_url()
                 if not sso_logout_url:
                     log.info("No SSO logout path configured, logout of [%s] will be local only",
-                             current_user.name)
+                             username)
                     return None
                 session.put("_in_logout", True)
                 original_response = user_view.logout()
                 log.debug("Redirecting [%s] to SSO logout at: %s",
-                          current_user.name, sso_logout_url)
+                          username, sso_logout_url)
                 return redirect(sso_logout_url + '?redirect_uri=' + original_response.location)
     else:
         def identify(self) -> Optional[Response]:
