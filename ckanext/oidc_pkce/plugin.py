@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import logging
 from typing import Optional
 
 from flask import redirect
@@ -12,6 +13,8 @@ from ckan.common import current_user, session
 from ckan.views import user as user_view
 
 from . import config, helpers, interfaces, utils, views
+
+log = logging.getLogger(__name__)
 
 try:
     config_declarations = tk.blanket.config_declarations
@@ -64,11 +67,16 @@ class OidcPkcePlugin(p.SingletonPlugin):
                 # not logged in, do nothing
                 return None
             else:
+                log.info("Logging out [%s]", current_user.name)
                 sso_logout_url = config.logout_url()
                 if not sso_logout_url:
+                    log.info("No SSO logout path configured, logout of [%s] will be local only",
+                             current_user.name)
                     return None
                 session.put("_in_logout", True)
                 original_response = user_view.logout()
+                log.debug("Redirecting [%s] to SSO logout at: %s",
+                          current_user.name, sso_logout_url)
                 return redirect(sso_logout_url + '?redirect_uri=' + original_response.location)
     else:
         def identify(self) -> Optional[Response]:
