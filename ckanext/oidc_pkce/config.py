@@ -120,9 +120,9 @@ def logout_path() -> str:
 
 def logout_url() -> str:
     """CKAN URL that handles authentication response."""
-    url = base_url()
+    url = logout_path()
     if url:
-        url = url + logout_path()
+        url = base_url() + url
     return url
 
 
