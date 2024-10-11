@@ -63,7 +63,7 @@ class OidcPkcePlugin(p.SingletonPlugin):
             """
             from ckan.common import current_user
             if session.pop("_in_logout", False):
-                log.debug("SSO logout found in-progress flag, skipping")
+                log.debug("SSO logout found in-progress flag, skipping recursive call")
                 return None
             username = current_user.name or tk.g.user
             if not username:
