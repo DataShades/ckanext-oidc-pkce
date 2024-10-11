@@ -23,12 +23,11 @@ except AttributeError:
         return cls
 
 
-def _current_username():
+def _current_user():
     if tk.check_ckan_version('2.10'):
         from ckan.common import current_user
-        if current_user.name:
-            return current_user.name
-    return tk.g.user
+        return current_user
+    return tk.g.userobj
 
 
 @config_declarations
@@ -73,22 +72,26 @@ class OidcPkcePlugin(p.SingletonPlugin):
             if session.pop("_in_logout", False):
                 log.debug("SSO logout found in-progress flag, skipping recursive call")
                 return None
-            username = _current_username()
-            if not username:
+            current_user = _current_user()
+            if not current_user.is_authenticated:
                 log.info("No current user found, skipping SSO logout")
                 return None
-            else:
-                log.info("Logging out [%s]", username)
-                sso_logout_url = config.logout_url()
-                if not sso_logout_url:
-                    log.info("No SSO logout path configured, logout of [%s] will be local only",
-                             username)
-                    return None
-                session["_in_logout"] = True
-                original_response = user_view.logout()
-                log.debug("Redirecting [%s] to SSO logout at: %s",
-                          username, sso_logout_url)
-                return redirect(sso_logout_url + '?redirect_uri=' + original_response.location)
+            plugin_extras = getattr(current_user, 'plugin_extras', None)
+            if not plugin_extras or not plugin_extras.get('oidc_pkce'):
+                log.info("Current user [%s] is not associated with SSO, skipping SSO logout",
+                         current_user.name)
+                return None
+
+            log.info("Logging out [%s]", current_user.name)
+            sso_logout_url = config.logout_url()
+            if not sso_logout_url:
+                log.info("No SSO logout path configured, logout of [%s] will be local only",
+                         current_user.name)
+                return None
+            session["_in_logout"] = True
+            original_response = user_view.logout()
+            log.debug("Redirecting [%s] to SSO logout: %s", current_user.name, sso_logout_url)
+            return redirect(sso_logout_url + '?redirect_uri=' + original_response.location)
     else:
         def identify(self) -> Optional[Response]:
             user = model.User.get(session.get(utils.SESSION_USER))
