@@ -83,17 +83,17 @@ def auth_url() -> str:
 
 
 def token_path() -> str:
-    """Path(without base URL) where authorization token can be retrived."""
+    """Path (without base URL) where authorization token can be retrieved."""
     return tk.config.get(CONFIG_TOKEN_PATH, DEFAULT_TOKEN_PATH)
 
 
 def token_url() -> str:
-    """SSO URL where authorization token can be retrived."""
+    """SSO URL where authorization token can be retrieved."""
     return base_url() + token_path()
 
 
 def redirect_path() -> str:
-    """Path(without base URL) that handles authentication response."""
+    """Path (without base URL) that handles authentication response."""
 
     return tk.config.get(CONFIG_REDIRECT_PATH, DEFAULT_REDIRECT_PATH)
 
@@ -104,19 +104,18 @@ def redirect_url() -> str:
 
 
 def userinfo_path() -> str:
-    """Path(without base URL) where user info can be retrived."""
+    """Path (without base URL) where user info can be retrieved."""
     return tk.config.get(CONFIG_USERINFO_PATH, DEFAULT_USERINFO_PATH)
 
 
 def userinfo_url() -> str:
-    """SSO URL where user info can be retrived."""
+    """SSO URL where user info can be retrieved."""
     return base_url() + userinfo_path()
 
 
 def logout_path() -> str:
-    """Path(without base URL) that handles logout."""
-
-    return tk.config.get(CONFIG_LOGOUT_PATH, DEFAULT_LOGOUT_PATH)
+    """Path (without base URL) that handles logout."""
+    return tk.config.get(CONFIG_LOGOUT_PATH) or DEFAULT_LOGOUT_PATH
 
 
 def logout_url() -> str:
@@ -148,5 +147,5 @@ def munge_password() -> bool:
 
 
 def scope() -> str:
-    """Scope of the user info retrived from SSO application"""
+    """Scope of the user info retrieved from SSO application"""
     return tk.config.get(CONFIG_SCOPE, DEFAULT_SCOPE)
