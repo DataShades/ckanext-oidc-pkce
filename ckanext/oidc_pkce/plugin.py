@@ -76,7 +76,7 @@ class OidcPkcePlugin(p.SingletonPlugin):
                     log.info("No SSO logout path configured, logout of [%s] will be local only",
                              username)
                     return None
-                session.put("_in_logout", True)
+                session["_in_logout"] = True
                 original_response = user_view.logout()
                 log.debug("Redirecting [%s] to SSO logout at: %s",
                           username, sso_logout_url)
