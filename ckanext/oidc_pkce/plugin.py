@@ -23,6 +23,14 @@ except AttributeError:
         return cls
 
 
+def _current_username():
+    if tk.check_ckan_version('2.10'):
+        from ckan.common import current_user
+        if current_user.name:
+            return current_user.name
+    return tk.g.user
+
+
 @config_declarations
 class OidcPkcePlugin(p.SingletonPlugin):
     p.implements(p.IBlueprint)
@@ -49,6 +57,7 @@ class OidcPkcePlugin(p.SingletonPlugin):
     # IAuthenticator
 
     if tk.check_ckan_version("2.10"):
+
         def logout(self):
             """ We want to return a view after the regular logout logic,
             rather than before.
@@ -61,11 +70,10 @@ class OidcPkcePlugin(p.SingletonPlugin):
             After it completes, we assemble a redirect and pass that back
             to the code that originally called this function.
             """
-            from ckan.common import current_user
             if session.pop("_in_logout", False):
                 log.debug("SSO logout found in-progress flag, skipping recursive call")
                 return None
-            username = current_user.name or tk.g.user
+            username = _current_username()
             if not username:
                 log.info("No current user found, skipping SSO logout")
                 return None
