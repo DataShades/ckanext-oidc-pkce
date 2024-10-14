@@ -16,23 +16,30 @@ groups:
         default: /oauth2/default/v1/authorize
         example: /auth
         description: |
-          Path to the authorization endpont inside SSO application
+          Path to the authorization endpoint inside SSO application.
 
       - key: ckanext.oidc_pkce.token_path
         default: /oauth2/default/v1/token
         example: /token
-        description: Path to the token endpont inside SSO application
+        description: Path to the token endpoint inside SSO application.
 
       - key: ckanext.oidc_pkce.userinfo_path
         default: /oauth2/default/v1/userinfo
         example: /userinfo
-        description: Path to the userinfo endpont inside SSO application
+        description: Path to the userinfo endpoint inside SSO application.
+
+      - key: ckanext.oidc_pkce.logout_path
+        default: null
+        example: /logout
+        description: |
+          Path to the logout endpoint inside SSO application.
+          If not provided, logouts will not be propagated to SSO.
 
       - key: ckanext.oidc_pkce.redirect_path
         default: /user/login/oidc-pkce/callback
         example: /local/oidc/handler
         description: |
-          Path to the authentication response handler inside CKAN application
+          Path to the authentication response handler inside CKAN application.
 
       - key: ckanext.oidc_pkce.error_redirect
         default: null

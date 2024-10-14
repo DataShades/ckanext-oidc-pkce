@@ -1,0 +1,14 @@
+{% ckan_extends %}
+{#
+Adds a link from the login form to the single sign-on provider.
+#}
+
+{% block form %}
+    <p><a href="{{ h.url_for('user.login') }}/oidc-pkce" class="btn btn-primary"><i class="fa fa-sign-in"></i> Log in via single sign-on</a></p>
+    {{ super() }}
+{% endblock %}
+
+{% block help_register_button %}
+    {{ super() }}
+    <a href="{{ h.url_for('user.login') }}/oidc-pkce" class="btn btn-secondary">Register via single sign-on</a>
+{% endblock %}

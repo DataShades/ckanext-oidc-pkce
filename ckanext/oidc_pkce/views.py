@@ -125,8 +125,9 @@ def callback():
 
     user = utils.sync_user(userinfo)
     if not user:
-        error = "User not found"
+        error = "Unique user not found"
         log.error("Error: %s", error)
+        tk.h.flash_error(error)
         session[SESSION_ERROR] = error
         return tk.redirect_to(came_from)
 
@@ -142,5 +143,6 @@ def callback():
     return tk.redirect_to(
         came_from or tk.config.get("ckan.route_after_login", "dashboard.index")
     )
+
 
 bp.add_url_rule(config.redirect_path(), view_func=callback)
