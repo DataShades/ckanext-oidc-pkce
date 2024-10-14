@@ -44,7 +44,7 @@ def sync_user(userinfo: dict[str, Any]) -> Optional[model.User]:
 
     user = plugin.get_oidc_user(userinfo)
     if not user:
-        log.error("Cannot locate user/create using OIDC info: %s", userinfo)
+        log.error("Cannot locate or create unique user using OIDC info: %s", userinfo)
         return
 
     return user
