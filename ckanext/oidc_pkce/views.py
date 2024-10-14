@@ -127,6 +127,7 @@ def callback():
     if not user:
         error = "Unique user not found"
         log.error("Error: %s", error)
+        tk.h.flash_error(error)
         session[SESSION_ERROR] = error
         return tk.redirect_to(came_from)
 
