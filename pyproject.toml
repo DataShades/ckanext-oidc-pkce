@@ -1,3 +1,44 @@
+[build-system]
+requires = [ "setuptools",]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ckanext-oidc-pkce"
+version = "0.3.1.post1"
+description = "CKAN OIDC authenticator with PKCE flow"
+classifiers = [ "Development Status :: 4 - Beta", "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)", "Programming Language :: Python :: 3.7", "Programming Language :: Python :: 3.8", "Programming Language :: Python :: 3.9", "Programming Language :: Python :: 3.10",]
+keywords = [ "CKAN", "Okta", "oidc", "pkce", "authentication",]
+dependencies = [ "typing_extensions",]
+authors = [
+    {name = "DataShades", email = "datashades@linkdigital.com.au"},
+    {name = "Sergey Motornyuk", email = "sergey.motornyuk@linkdigital.com.au"},
+]
+maintainers = [
+    {name = "DataShades", email = "datashades@linkdigital.com.au"},
+]
+
+[project.readme]
+file = "README.md"
+content-type = "text/markdown"
+
+[project.license]
+text = "AGPL"
+
+[project.urls]
+Homepage = "https://github.com/DataShades/ckanext-oidc-pkce"
+
+[project.optional-dependencies]
+test = [ "pytest-factoryboy",]
+
+[project.entry-points."ckan.plugins"]
+oidc_pkce = "ckanext.oidc_pkce.plugin:OidcPkcePlugin"
+
+[project.entry-points."babel.extractors"]
+ckan = "ckan.lib.extract:extract_ckan"
+
+[tool.setuptools.packages]
+find = {}
+
 [tool.black]
 line-length = 79
 preview = true
@@ -88,4 +129,3 @@ reportUnsupportedDunderAll = true
 reportUnusedCoroutine = true
 reportUnnecessaryTypeIgnoreComment = true
 reportMatchNotExhaustive = true
-
