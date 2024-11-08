@@ -58,6 +58,7 @@ class IOidcPkce(Interface):
             data["plugin_extras"] = extras
 
             user_dict.update(data)
+            user_dict.pop("name")  # Username is untouched, so exclude it from the update payload.
             tk.get_action("user_update")({"user": admin["name"]}, user_dict)
 
             signals.user_sync.send(user.id)
