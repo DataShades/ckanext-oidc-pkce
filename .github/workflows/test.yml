@@ -26,6 +26,9 @@ jobs:
       matrix:
         ckan-version: ["2.11", "2.10", 2.9]
         experimental: [false]
+        include:
+          - ckan-version: 'master'
+            experimental: true  #master is unstable, good to know if we are compatible or not
 
     name: Test on CKAN ${{ matrix.ckan-version }}
     runs-on: ubuntu-latest
@@ -75,6 +78,7 @@ jobs:
           ckan -c test.ini db init
 
       - name: Run tests
+        continue-on-error: ${{ matrix.experimental }}
         run: pytest --ckan-ini=test.ini --cov=ckanext.oidc_pkce --disable-warnings ckanext/oidc_pkce --junit-xml=/tmp/artifacts/junit/results.xml
 
       - name: Test Summary
