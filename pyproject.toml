@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ckanext-oidc-pkce"
-version = "0.3.1.post1"
+version = "0.4.0"
 description = "CKAN OIDC authenticator with PKCE flow"
 classifiers = [ "Development Status :: 4 - Beta", "License :: OSI Approved :: GNU Affero General Public License v3 or later (AGPLv3+)", "Programming Language :: Python :: 3.7", "Programming Language :: Python :: 3.8", "Programming Language :: Python :: 3.9", "Programming Language :: Python :: 3.10",]
 keywords = [ "CKAN", "Okta", "oidc", "pkce", "authentication",]
