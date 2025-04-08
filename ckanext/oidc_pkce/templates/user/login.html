@@ -4,11 +4,15 @@ Adds a link from the login form to the single sign-on provider.
 #}
 
 {% block form %}
-    <p><a href="{{ h.url_for('user.login') }}/oidc-pkce" class="btn btn-primary"><i class="fa fa-sign-in"></i> Sign in with your Digital ID</a></p>
+    {% block sso_form %}
+    <p><a href="{{ h.url_for('user.login') }}/oidc-pkce" class="btn btn-primary"><i class="fa fa-sign-in"></i> Log in via single sign-on</a></p>
+    {% endblock %}
     {{ super() }}
 {% endblock %}
 
 {% block help_register_button %}
     {{ super() }}
-    Learn more about using a <a href="https://www.qld.gov.au/qdifaq">Digital ID</a>
+    {% block sso_help_register %}
+    <a href="{{ h.url_for('user.login') }}/oidc-pkce" class="btn btn-secondary">Register via single sign-on</a>
+    {% endblock %}
 {% endblock %}
