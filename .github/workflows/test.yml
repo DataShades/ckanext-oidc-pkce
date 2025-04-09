@@ -1,3 +1,4 @@
+---
 name: Tests
 on:
   push:
@@ -6,21 +7,37 @@ on:
       - master
 
 jobs:
-  test:
-    strategy:
-      matrix:
-        ckan-version: ["2.10", 2.9]
-      fail-fast: false
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.10'
+      - name: Install requirements
+        run: pip install flake8 pycodestyle
+      - name: Check syntax
+        run: flake8
 
+  test:
+    needs: lint
+    strategy:
+      fail-fast: false
+      matrix:
+        ckan-version: ["2.11", "2.10", 2.9]
+        experimental: [false]
+        include:
+          - ckan-version: 'master'
+            experimental: true  #master is unstable, good to know if we are compatible or not
+
+    name: Test on CKAN ${{ matrix.ckan-version }}
     runs-on: ubuntu-latest
     container:
-      # The CKAN version tag of the Solr and Postgres containers should match
-      # the one of the container the tests run on.
-      # You can switch this base image with a custom image tailored to your project
-      image: openknowledge/ckan-dev:${{ matrix.ckan-version }}
+      image: ckan/ckan-dev:${{ matrix.ckan-version }}
+      options: --user root
     services:
       solr:
-        image: ckan/ckan-solr:${{ matrix.ckan-version }}
+        image: ckan/ckan-solr:${{ matrix.ckan-version }}-solr9
       postgres:
         image: ckan/ckan-postgres-dev:${{ matrix.ckan-version }}
         env:
@@ -30,7 +47,6 @@ jobs:
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
       redis:
           image: redis:3
-
     env:
       CKAN_SQLALCHEMY_URL: postgresql://ckan_default:pass@postgres/ckan_test
       CKAN_DATASTORE_WRITE_URL: postgresql://datastore_write:pass@postgres/datastore_test
@@ -39,25 +55,35 @@ jobs:
       CKAN_REDIS_URL: redis://redis:6379/1
 
     steps:
-    - uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        continue-on-error: ${{ matrix.experimental }}
 
-    - name: Install lint requirements
-      run: pip install flake8 pycodestyle
-    - name: Check syntax
-      run: flake8
+      - if: ${{ matrix.ckan-version == 2.9 }}
+        continue-on-error: ${{ matrix.experimental }}
+        run: pip install "setuptools>=44.1.0,<71"
+      - name: Install requirements
+        continue-on-error: ${{ matrix.experimental }}
+        # Install any extra requirements your extension has here (dev requirements, other extensions etc)
+        run: |
+          pip install -r requirements.txt
+          pip install -r dev-requirements.txt
+          pip install -e .
 
-    - name: Install requirements
-      # Install any extra requirements your extension has here (dev requirements, other extensions etc)
-      run: |
-        pip install -r requirements.txt
-        pip install -r dev-requirements.txt
-        pip install -e .
-    - name: Setup extension
-      # Extra initialization steps
-      run: |
-        # Replace default path to CKAN core config file with the one on the container
-        sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
+      - name: Setup extension
+        continue-on-error: ${{ matrix.experimental }}
+        # Extra initialization steps
+        run: |
+          # Replace default path to CKAN core config file with the one on the container
+          sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
+          ckan -c test.ini db init
 
-        ckan -c test.ini db init
-    - name: Run tests
-      run: pytest --ckan-ini=test.ini --cov=ckanext.oidc_pkce --disable-warnings ckanext/oidc_pkce
+      - name: Run tests
+        continue-on-error: ${{ matrix.experimental }}
+        run: pytest --ckan-ini=test.ini --cov=ckanext.oidc_pkce --disable-warnings ckanext/oidc_pkce --junit-xml=/tmp/artifacts/junit/results.xml
+
+      - name: Test Summary
+        uses: test-summary/action@v2
+        continue-on-error: ${{ matrix.experimental }}
+        with:
+          paths: "/tmp/artifacts/junit/*.xml"
+        if: always()
