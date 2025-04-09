@@ -8,7 +8,8 @@ import requests
 from flask import Blueprint
 
 import ckan.plugins.toolkit as tk
-from ckan.common import session
+from ckan.plugins.toolkit import request
+from ckan.common import session  # flask.session
 from ckan.plugins import PluginImplementations
 
 from . import config, utils
@@ -29,8 +30,17 @@ def get_blueprints():
     return [bp]
 
 
+def _no_cache():
+    # Ensure auth pages are not public cached
+    # Alternative way, generate anon user from ckan.common import current_user
+    request.environ[u'__no_cache__'] = True
+    # Flag that should soon be in ckan to disable cache-control: private
+    request.environ[u'__no_private_cache__'] = True
+
+
 @bp.route("/user/login/oidc-pkce")
 def login():
+    _no_cache()
     verifier = utils.code_verifier()
     state = utils.app_state()
     session[SESSION_VERIFIER] = verifier
@@ -61,6 +71,7 @@ def login():
 
 
 def callback():
+    _no_cache()
     # TODO: check state
     error = tk.request.args.get("error")
     state = tk.request.args.get("state")
@@ -82,7 +93,7 @@ def callback():
             error = "The app state does not match"
 
     if error:
-        log.error(f"Error: {error}")
+        log.error("Error: %s", error)
         session[SESSION_ERROR] = error
         return tk.redirect_to(came_from)
 
