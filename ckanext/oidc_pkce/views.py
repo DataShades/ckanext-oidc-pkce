@@ -133,7 +133,9 @@ def callback():
         config.userinfo_url(),
         headers={"Authorization": f"Bearer {access_token}"},
     ).json()
-
+    if access_token:
+        userinfo["access_token"] = access_token
+    
     user = utils.sync_user(userinfo)
     if not user:
         error = "Unique user not found"
