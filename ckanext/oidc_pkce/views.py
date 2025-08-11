@@ -141,7 +141,7 @@ def callback():
     ).json()
 
     userinfo["access_token"] = access_token
-    
+
     user = utils.sync_user(userinfo)
     if not user:
         error = "Unique user not found"
