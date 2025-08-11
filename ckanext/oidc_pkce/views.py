@@ -128,13 +128,19 @@ def callback():
 
     access_token = exchange["access_token"]
 
+    if not access_token:
+        error = "No access token returned from the token endpoint."
+        log.error("Error: %s", error)
+        session[SESSION_ERROR] = error
+        return tk.redirect_to(came_from)
+
     # Authorization flow successful, get userinfo and login user
     userinfo = requests.get(
         config.userinfo_url(),
         headers={"Authorization": f"Bearer {access_token}"},
     ).json()
-    if access_token:
-        userinfo["access_token"] = access_token
+
+    userinfo["access_token"] = access_token
     
     user = utils.sync_user(userinfo)
     if not user:
