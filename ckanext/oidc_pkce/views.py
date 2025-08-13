@@ -131,6 +131,7 @@ def callback():
     if not access_token:
         error = "No access token returned from the token endpoint."
         log.error("Error: %s", error)
+        tk.h.flash_error(error)
         session[SESSION_ERROR] = error
         return tk.redirect_to(came_from)
 
