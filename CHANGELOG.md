@@ -1,4 +1,11 @@
 
+## [v0.4.1](https://github.com/DataShades/ckanext-oidc-pkce/releases/tag/v0.4.1) - 2025-08-18
+[Compare with v0.4.0](https://github.com/DataShades/ckanext-oidc-pkce/compare/v0.4.0..v0.4.1)
+
+### 🚀 Features
+
+- optionally append access token into userinfo(#9 by @amandazhuyilan) ([259496a](https://github.com/DataShades/ckanext-oidc-pkce/commit/259496ae413212aa0d69915b3e41b2aeec90ce12))
+
 ## [v0.4.0](https://github.com/DataShades/ckanext-oidc-pkce/releases/tag/v0.4.0) - 2025-03-11
 [Compare with v0.3.1](https://github.com/DataShades/ckanext-oidc-pkce/compare/v0.3.1..v0.4.0)
 
