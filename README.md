@@ -9,9 +9,9 @@ OpenID connect with PKCE flow authenticator for CKAN.
 > PRs or feature-requests are welcome
 
 The plugin adds an extra route to CKAN allowing login through an external
-application. This route available at `/user/login/oidc-pkce`(`oid_pkce.login`
+application. This route is available at `/user/login/oidc-pkce`(`oidc_pkce.login`
 endpoint). Original authentication system from CKAN is unchanged and it's up to
-you(or another extension) to hide original login page if only SSO accounts are
+you (or another extension) to hide original login page if only SSO accounts are
 allowed on the portal.
 
 ## Requirements
@@ -39,27 +39,27 @@ Compatibility with core CKAN versions:
 
 ```ini
 # URL of SSO application
-# Could be overriden at runtime with env var CKANEXT_OIDC_PKCE_BASE_URL
+# Could be overridden at runtime with env var CKANEXT_OIDC_PKCE_BASE_URL
 ckanext.oidc_pkce.base_url = https://12345.example.okta.com
 
 # ClientID of SSO application
-# Could be overriden at runtime with env var CKANEXT_OIDC_PKCE_CLIENT_ID
+# Could be overridden at runtime with env var CKANEXT_OIDC_PKCE_CLIENT_ID
 ckanext.oidc_pkce.client_id = clientid
 
 # ClientSecret of SSO application
-# (optional, only need id Client App defines a secret, default: "")
-# Could be overriden at runtime with env var CKANEXT_OIDC_PKCE_CLIENT_SECRET
+# (optional, only need id if Client App defines a secret, default: "")
+# Could be overridden at runtime with env var CKANEXT_OIDC_PKCE_CLIENT_SECRET
 ckanext.oidc_pkce.client_secret = clientsecret
 
-# Path to the authorization endpont inside SSO application
+# Path to the authorization endpoint inside SSO application
 # (optional, default: /oauth2/default/v1/authorize)
 ckanext.oidc_pkce.auth_path = /auth
 
-# Path to the token endpont inside SSO application
+# Path to the token endpoint inside SSO application
 # (optional, default: /oauth2/default/v1/token)
 ckanext.oidc_pkce.token_path = /token
 
-# Path to the userinfo endpont inside SSO application
+# Path to the userinfo endpoint inside SSO application
 # (optional, default: /oauth2/default/v1/userinfo)
 ckanext.oidc_pkce.userinfo_path = /userinfo
 
@@ -67,9 +67,9 @@ ckanext.oidc_pkce.userinfo_path = /userinfo
 # (optional, default: /user/login/oidc-pkce/callback)
 ckanext.oidc_pkce.redirect_path = /local/oidc/handler
 
-# URL to redirect user in case of failed login attempt.  When empty(default)
-# redirects to `came_from` URL parameter if availabe or to CKAN login page
-# otherwise.
+# URL to redirect user in case of failed login attempt.
+# When empty (default), redirects to `came_from` URL parameter if available
+# or to CKAN login page otherwise.
 # (optional, default: )
 ckanext.oidc_pkce.error_redirect = /user/register
 
@@ -78,14 +78,17 @@ ckanext.oidc_pkce.error_redirect = /user/register
 # (optional, default: openid email profile)
 ckanext.oidc_pkce.scope = email
 
-# For newly created CKAN users use the same ID as one from SSO application
+# Whether newly created CKAN users will use the same ID as the one
+# from the SSO application
 # (optional, default: false)
 ckanext.oidc_pkce.use_same_id = true
 
-# When connecting to an existing(non-sso) account, override user's password
-# so that it becomes impossible to login using CKAN authentication system.
-# Enable this flag if you want to force SSO-logins for all users that once
-# used SSO-login.
+# When connecting to an existing (non-SSO) account, override user's password
+# so that it becomes impossible to log in using CKAN authentication system.
+# Enable this flag if you want to force SSO logins for all accounts
+# that have SSO.
+# Does not apply to sysadmins (as they need to know their passwords in order
+# to update user profiles).
 # (optional, default: false)
 ckanext.oidc_pkce.munge_password = true
 
