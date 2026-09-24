@@ -53,7 +53,7 @@ class IOidcPkce(Interface):
             if user_dict.get("fullname", None):
                 data.pop("fullname")  # Don't override fullname if it is already populated
 
-            if not config.munge_password():
+            if user_dict.get("sysadmin", False) or not config.munge_password():
                 data.pop("password")
 
             extras.update(data["plugin_extras"])
