@@ -3,6 +3,7 @@
 
 exclude =
     ckan
+    .git
 
 # Extended output format.
 format = pylint

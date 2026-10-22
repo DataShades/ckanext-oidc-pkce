@@ -18,10 +18,12 @@ allowed on the portal.
 
 Compatibility with core CKAN versions:
 
-| CKAN version | Compatible? |
-|--------------|-------------|
-| 2.9          | yes         |
-| 2.10         | yes         |
+| CKAN version | Compatible?          |
+|--------------|----------------------|
+| 2.9          | last tested on 0.4.1 |
+| 2.10         | yes                  |
+| 2.11         | yes                  |
+| 2.12         | yes                  |
 
 ## Installation
 

@@ -7,13 +7,14 @@ on:
       - master
 
 jobs:
+  # Quick check so we don't waste minutes if there's a Flake8 error
   lint:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97  # v7.0.0
         with:
-          python-version: '3.10'
+          python-version: '3.x'
       - name: Install requirements
         run: pip install flake8 pycodestyle
       - name: Check syntax
@@ -24,13 +25,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        ckan-version: ["2.11", "2.10", 2.9]
+        ckan-version: ['2.12', '2.11', '2.10']
         experimental: [false]
         include:
           - ckan-version: 'master'
-            experimental: true  #master is unstable, good to know if we are compatible or not
+            experimental: true  # master is unstable, good to know if we are compatible or not
 
-    name: Test on CKAN ${{ matrix.ckan-version }}
+    name: ${{ matrix.experimental && '**Fail_Ignored** ' || '' }} Test on CKAN ${{ matrix.ckan-version }}
     runs-on: ubuntu-latest
     container:
       image: ckan/ckan-dev:${{ matrix.ckan-version }}
@@ -46,7 +47,7 @@ jobs:
           POSTGRES_DB: postgres
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
       redis:
-          image: redis:3
+        image: redis
     env:
       CKAN_SQLALCHEMY_URL: postgresql://ckan_default:pass@postgres/ckan_test
       CKAN_DATASTORE_WRITE_URL: postgresql://datastore_write:pass@postgres/datastore_test
@@ -55,34 +56,32 @@ jobs:
       CKAN_REDIS_URL: redis://redis:6379/1
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
+        timeout-minutes: 1
         continue-on-error: ${{ matrix.experimental }}
 
-      - if: ${{ matrix.ckan-version == 2.9 }}
-        continue-on-error: ${{ matrix.experimental }}
-        run: pip install "setuptools>=44.1.0,<71"
       - name: Install requirements
-        continue-on-error: ${{ matrix.experimental }}
         # Install any extra requirements your extension has here (dev requirements, other extensions etc)
         run: |
-          pip install -r requirements.txt
-          pip install -r dev-requirements.txt
+          pip install -r requirements.txt -r dev-requirements.txt
           pip install -e .
+        timeout-minutes: 10
+        continue-on-error: ${{ matrix.experimental }}
 
       - name: Setup extension
-        continue-on-error: ${{ matrix.experimental }}
         # Extra initialization steps
         run: |
           # Replace default path to CKAN core config file with the one on the container
           sed -i -e 's/use = config:.*/use = config:\/srv\/app\/src\/ckan\/test-core.ini/' test.ini
           ckan -c test.ini db init
+        continue-on-error: ${{ matrix.experimental }}
 
       - name: Run tests
-        continue-on-error: ${{ matrix.experimental }}
         run: pytest --ckan-ini=test.ini --cov=ckanext.oidc_pkce --disable-warnings ckanext/oidc_pkce --junit-xml=/tmp/artifacts/junit/results.xml
+        continue-on-error: ${{ matrix.experimental }}
 
       - name: Test Summary
-        uses: test-summary/action@v2
+        uses: test-summary/action@37b508cfee6d4d080eedd00b5bb240a6a784a6a5  # v2.6
         continue-on-error: ${{ matrix.experimental }}
         with:
           paths: "/tmp/artifacts/junit/*.xml"
