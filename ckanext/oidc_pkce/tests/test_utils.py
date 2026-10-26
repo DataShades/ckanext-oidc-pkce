@@ -130,7 +130,7 @@ class TestSyncUser:
         matched_user = utils.sync_user(new_user_info)
 
         assert matched_user is not None
-        assert matched_user.id == user.id
+        assert matched_user.id == user.get("id")
         assert matched_user.email == user_info["email"]
 
     def test_get_oidc_user_ignores_inactive_users_for_sub(self, user_factory):
