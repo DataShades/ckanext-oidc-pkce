@@ -4,6 +4,7 @@
 exclude =
     ckan
     .git
+    .venv
 
 # Extended output format.
 format = pylint
