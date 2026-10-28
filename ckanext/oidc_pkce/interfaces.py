@@ -22,11 +22,11 @@ class IOidcPkce(Interface):
     def get_oidc_user(self, userinfo: dict[str, Any]) -> Optional[model.User]:
         q = model.Session.query(model.User)
 
+        active_state_filter = model.User.state == 'active'
+
         if tk.check_ckan_version("2.12"):
             # Handle 2.12+ where pending and deleted can be added to the list.
             active_state_filter = model.User.state.in_(tk.config["ckan.user.unique_email_states"])
-        else:
-            active_state_filter = model.User.state == 'active'
 
         user = q.filter(
             model.User.plugin_extras["oidc_pkce"]["sub"].astext == userinfo["sub"],

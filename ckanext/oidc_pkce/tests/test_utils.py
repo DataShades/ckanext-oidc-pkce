@@ -81,7 +81,7 @@ class TestSyncUser:
 
     @pytest.mark.skipif(not tk.check_ckan_version("2.12"), reason="This is for ckan 2.12+")
     def test_2_12_sync_email_is_not_unique_duplicate_found_error(self, user_factory, user_info):
-        """Miss Configuration where deleted is included can return duplicates, so none are returned
+        """Misconfiguration where deleted is included can return duplicates, so none are returned
         """
 
         user_factory(
@@ -133,7 +133,7 @@ class TestSyncUser:
         assert matched_user.id == user.get("id")
         assert matched_user.email == user_info["email"]
 
-    def test_get_oidc_user_ignores_inactive_users_for_sub(self, user_factory):
+    def test_get_oidc_user_ignores_inactive_users_for_sub_on_signup(self, user_factory):
         """verify a user with a matching 'sub' but 'deleted' state is NOT returned
         """
         sub_value = "deleted_sub_999"

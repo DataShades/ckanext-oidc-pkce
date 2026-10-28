@@ -16,12 +16,12 @@ updates:
   open-pull-requests-limit: 10
   registries:
   - python-index-pypi-org
-- package-ecosystem: docker
-  directory: "/.docker"
-  schedule:
-    interval: daily
-    time: "19:00"
-  open-pull-requests-limit: 10
+#- package-ecosystem: docker
+#  directory: "/.docker"
+#  schedule:
+#    interval: daily
+#    time: "19:00"
+#  open-pull-requests-limit: 10
 - package-ecosystem: "github-actions"
   directory: "/"
   schedule:
