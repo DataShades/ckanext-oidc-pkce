@@ -14,15 +14,37 @@ jobs:
       GH_TOKEN: ${{ github.token }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1  # v7.0.1
       with:
           fetch-depth: 0
 
-    - name: Set up git-cliff
-      uses: kenji-miyake/setup-git-cliff@v1
+    - name: Generate latest changelog
+      id: git-cliff
+      uses: orhun/git-cliff-action@a9a95522b26fe6403f7bb24031f21fb573d0f5ff #v4.9.1
+      with:
+        config: cliff.toml
+        args: --verbose --latest
+      env:
+        OUTPUT: CHANGELOG_LATEST.md
+        GITHUB_REPO: ${{ github.repository }}
 
     - name: Build Changelog URL and create release
       run: |
         TAG_NAME=${{ github.ref_name }}
-        NOTES=$(git cliff --latest)
-        gh release create "$TAG_NAME" --verify-tag --title "$TAG_NAME" --notes "$NOTES"
+        gh release create "$TAG_NAME" --verify-tag --title "$TAG_NAME" --notes-file CHANGELOG_LATEST.md
+
+
+    - name: Generate full changelog
+      uses: orhun/git-cliff-action@a9a95522b26fe6403f7bb24031f21fb573d0f5ff #v4.9.1
+      with:
+        config: cliff.toml
+        args: --verbose
+      env:
+        OUTPUT: CHANGELOG.md
+        GITHUB_REPO: ${{ github.repository }}
+
+    - name: Package release notes
+      uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a #v7.0.1
+      with:
+        name: Changelog
+        path: CHANGELOG.md
