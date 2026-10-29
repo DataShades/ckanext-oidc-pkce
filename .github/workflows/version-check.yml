@@ -2,6 +2,9 @@ name: Version check
 
 on: pull_request
 
+permissions:
+  contents: read
+
 jobs:
   version_update_check:
     runs-on: ubuntu-latest
